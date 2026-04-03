@@ -1,28 +1,30 @@
+from flask import Flask, render_template, request
 import requests
-from flask import Flask, render_template, request, jsonify
 
 app = Flask(__name__)
 
-@app.route('/')
-def index():
-    return render_template('index.html')
+@app.route("/")
+def home():
+    return render_template("index.html")
 
-@app.route('/check', methods=['POST'])
-def check_id():
+@app.route("/check", methods=["POST"])
+def check():
+    uid = request.form.get("uid")
+
+    if not uid:
+        return "❌ Enter UID"
+
     try:
-        player_id = request.json.get('player_id')
-        if not player_id:
-            return jsonify({"error": "UID required"}), 400
+        url = f"http://amin-team-api.vercel.app/check_banned?player_id={uid}"
+        res = requests.get(url, timeout=10)
 
-        # Tapaiँko working API URL
-        api_url = f"https://amin-team-api.vercel.app/check_banned?player_id={player_id}"
-        response = requests.get(api_url, timeout=10)
-        
-        if response.status_code == 200:
-            return jsonify(response.json())
-        return jsonify({"error": "API Error"}), 500
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        if res.status_code == 200:
+            return res.text
+        else:
+            return "❌ Server Error"
 
-if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    except:
+        return "❌ API Failed"
+
+if __name__ == "__main__":
+    app.run()
