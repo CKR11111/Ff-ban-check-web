@@ -6,180 +6,91 @@
     <title>CKRPRO BAN CHECK</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@700&family=Poppins:wght@400;600&family=Fira+Code&display=swap');
-
+        @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@700&family=Poppins:wght@400;600&display=swap');
         body {
             background: linear-gradient(180deg, #fbc2eb 0%, #a6c1ee 100%);
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: 'Poppins', sans-serif;
-            margin: 0;
-            padding: 10px;
+            height: 100vh; display: flex; align-items: center; justify-content: center;
+            font-family: 'Poppins', sans-serif; margin: 0; padding: 10px;
         }
-
-        /* सानो र चिटिक्क कार्ड */
         .compact-card {
-            background: rgba(255, 255, 255, 0.3);
-            backdrop-filter: blur(15px);
-            border-radius: 25px;
-            padding: 25px 20px;
-            width: 100%;
-            max-width: 340px;
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            text-align: center;
+            background: rgba(255, 255, 255, 0.3); backdrop-filter: blur(15px);
+            border-radius: 30px; padding: 30px 20px; width: 100%; max-width: 350px;
+            border: 1px solid rgba(255, 255, 255, 0.4); text-align: center;
         }
-
-        /* Banner Style */
         .banner {
-            font-family: 'Rajdhani', sans-serif;
-            font-size: 22px;
-            font-weight: 800;
-            color: #007AFF;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 20px;
-            text-shadow: 1px 1px 10px rgba(0, 122, 255, 0.2);
+            font-family: 'Rajdhani', sans-serif; font-size: 24px; color: #007AFF;
+            text-transform: uppercase; margin-bottom: 20px;
         }
-
         .input-box {
-            background: rgba(255, 255, 255, 0.8);
-            border: none;
-            border-radius: 12px;
-            padding: 12px 15px;
-            width: 100%;
-            font-size: 15px;
-            font-weight: 600;
-            outline: none;
-            margin-bottom: 12px;
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+            background: #fff; border: none; border-radius: 12px;
+            padding: 12px; width: 100%; font-size: 16px; margin-bottom: 12px; outline: none;
         }
-
         .check-btn {
-            background: #007AFF;
-            color: white;
-            border-radius: 12px;
-            padding: 12px;
-            width: 100%;
-            font-weight: bold;
-            font-size: 14px;
-            text-transform: uppercase;
-            transition: 0.2s;
-            box-shadow: 0 5px 15px rgba(0, 122, 255, 0.3);
+            background: #007AFF; color: white; border-radius: 12px;
+            padding: 12px; width: 100%; font-weight: bold; transition: 0.2s;
         }
-
-        .check-btn:active { transform: scale(0.96); }
-
-        /* Compact Terminal */
         .terminal {
-            background: #121212;
-            border-radius: 12px;
-            margin-top: 18px;
-            overflow: hidden;
-            border: 1px solid rgba(255,255,255,0.1);
+            background: #121212; border-radius: 15px; margin-top: 20px; overflow: hidden;
+            text-align: left; font-family: monospace; font-size: 13px;
         }
-
-        .term-head {
-            background: #1e1e1e;
-            padding: 6px 12px;
-            display: flex;
-            gap: 5px;
-        }
-
-        .dot { width: 8px; height: 8px; border-radius: 50%; }
-        .red { background: #ff5f56; } .yellow { background: #ffbd2e; } .green { background: #27c93f; }
-
-        .term-body {
-            padding: 15px;
-            color: #00ff00;
-            font-family: 'Fira Code', monospace;
-            min-height: 120px;
-            text-align: left;
-            font-size: 12px;
-            line-height: 1.4;
-        }
-
-        .cursor {
-            display: inline-block; width: 6px; height: 12px;
-            background: #00ff00; animation: blink 0.8s infinite;
-        }
-        @keyframes blink { 50% { opacity: 0; } }
-
-        .footer {
-            font-size: 9px;
-            color: #555;
-            margin-top: 15px;
-            font-weight: 600;
-            letter-spacing: 1px;
-        }
+        .term-body { padding: 15px; color: #00ff00; min-height: 120px; }
+        .dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 4px;}
     </style>
 </head>
 <body>
 
 <div class="compact-card">
     <div class="banner">CKRPRO BAN CHECK</div>
-
-    <input type="number" id="uid" class="input-box" placeholder="PLAYER UID">
-    <button onclick="startScan()" class="check-btn">CHECK STATUS</button>
+    <input type="number" id="uid" class="input-box" placeholder="ENTER UID HERE">
+    <button onclick="checkNow()" class="check-btn" id="btnText">CHECK STATUS</button>
 
     <div class="terminal">
-        <div class="term-head">
-            <div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div>
+        <div style="background:#1e1e1e; padding:5px 15px;">
+            <div class="dot" style="background:#ff5f56"></div>
+            <div class="dot" style="background:#ffbd2e"></div>
+            <div class="dot" style="background:#27c93f"></div>
         </div>
-        <div class="term-body" id="log">
-            Ready for input ... <span class="cursor"></span>
-        </div>
+        <div class="term-body" id="log">Ready to scan...</div>
     </div>
-
-    <div class="footer">
-        BY CKRPRO | YOUTUBE: CKR UNKNOWN
-    </div>
+    <p style="font-size: 10px; margin-top: 15px; color: #555;">BY CKRPRO | YOUTUBE: CKR UNKNOWN</p>
 </div>
 
 <script>
-    async function startScan() {
+    async function checkNow() {
         const uid = document.getElementById('uid').value;
         const log = document.getElementById('log');
+        const btn = document.getElementById('btnText');
 
-        if(!uid) {
-            log.innerHTML = '<span class="text-red-400">> Error: Enter UID!</span>';
-            return;
-        }
+        if(!uid) { log.innerHTML = "❌ Please enter UID!"; return; }
 
-        log.innerHTML = `> Scanning ID: ${uid}...<br>> Connecting CKRPRO Server...<span class="cursor"></span>`;
+        log.innerHTML = "> Scanning ID: " + uid + "...<br>> Requesting Server...";
+        btn.disabled = true; btn.style.opacity = "0.5";
 
         try {
-            const res = await fetch('/check', {
+            const response = await fetch('/check', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({player_id: uid})
             });
-            const data = await res.json();
-
+            
+            const data = await response.json();
+            
             setTimeout(() => {
-                if(data.is_banned !== undefined) {
-                    let status = data.is_banned ? 
-                        '<span class="text-red-500 font-bold">BANNED ❌</span>' : 
-                        '<span class="text-green-400 font-bold">SAFE ✅</span>';
-                    
-                    log.innerHTML = `
-                        > Result Found.<br>
-                        > ID: ${uid}<br>
-                        > STATUS: ${status}<br><br>
-                        > Process Done.
-                    `;
+                if(data.is_banned === true) {
+                    log.innerHTML = "> ID: "+uid+"<br>> STATUS: <span style='color:red'>BANNED ❌</span><br>> Done.";
+                } else if(data.is_banned === false) {
+                    log.innerHTML = "> ID: "+uid+"<br>> STATUS: <span style='color:#00ff00'>SAFE ✅</span><br>> Done.";
                 } else {
-                    log.innerHTML = '<span class="text-red-400">> API Error: No Response.</span>';
+                    log.innerHTML = "> Server Busy.<br>> Status: <span style='color:yellow'>NOT FOUND</span><br>> Try again later.";
                 }
+                btn.disabled = false; btn.style.opacity = "1";
             }, 1000);
 
         } catch(e) {
-            log.innerHTML = '<span class="text-red-400">> Connection Failed!</span>';
+            log.innerHTML = "❌ Connection Failed!";
+            btn.disabled = false; btn.style.opacity = "1";
         }
     }
 </script>
-
 </body>
 </html>
