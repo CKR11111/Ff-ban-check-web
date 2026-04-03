@@ -13,58 +13,58 @@
             font-family: 'Poppins', sans-serif; margin: 0; padding: 10px;
         }
         .compact-card {
-            background: rgba(255, 255, 255, 0.3); backdrop-filter: blur(15px);
+            background: rgba(255, 255, 255, 0.4); backdrop-filter: blur(20px);
             border-radius: 30px; padding: 30px 20px; width: 100%; max-width: 350px;
-            border: 1px solid rgba(255, 255, 255, 0.4); text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.5); text-align: center;
         }
         .banner {
             font-family: 'Rajdhani', sans-serif; font-size: 24px; color: #007AFF;
-            text-transform: uppercase; margin-bottom: 20px;
+            text-transform: uppercase; margin-bottom: 20px; font-weight: 800;
         }
         .input-box {
-            background: #fff; border: none; border-radius: 12px;
-            padding: 12px; width: 100%; font-size: 16px; margin-bottom: 12px; outline: none;
+            background: rgba(255, 255, 255, 0.9); border: none; border-radius: 12px;
+            padding: 14px; width: 100%; font-size: 16px; margin-bottom: 15px; outline: none;
         }
         .check-btn {
             background: #007AFF; color: white; border-radius: 12px;
-            padding: 12px; width: 100%; font-weight: bold; transition: 0.2s;
+            padding: 14px; width: 100%; font-weight: bold; transition: 0.3s;
         }
         .terminal {
-            background: #121212; border-radius: 15px; margin-top: 20px; overflow: hidden;
-            text-align: left; font-family: monospace; font-size: 13px;
+            background: #1a1a1a; border-radius: 15px; margin-top: 20px; overflow: hidden;
+            text-align: left; font-family: monospace; box-shadow: 0 10px 20px rgba(0,0,0,0.2);
         }
-        .term-body { padding: 15px; color: #00ff00; min-height: 120px; }
-        .dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 4px;}
+        .term-body { padding: 18px; color: #00ff00; min-height: 130px; font-size: 13px; line-height: 1.6; }
+        .dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; margin-right: 5px; }
     </style>
 </head>
 <body>
 
 <div class="compact-card">
     <div class="banner">CKRPRO BAN CHECK</div>
-    <input type="number" id="uid" class="input-box" placeholder="ENTER UID HERE">
-    <button onclick="checkNow()" class="check-btn" id="btnText">CHECK STATUS</button>
+    <input type="number" id="uid" class="input-box" placeholder="Enter Player UID">
+    <button onclick="checkNow()" class="check-btn" id="btn">CHECK STATUS</button>
 
     <div class="terminal">
-        <div style="background:#1e1e1e; padding:5px 15px;">
+        <div style="background:#2d2d2d; padding:8px 15px;">
             <div class="dot" style="background:#ff5f56"></div>
             <div class="dot" style="background:#ffbd2e"></div>
             <div class="dot" style="background:#27c93f"></div>
         </div>
-        <div class="term-body" id="log">Ready to scan...</div>
+        <div class="term-body" id="log">> Ready for input ...</div>
     </div>
-    <p style="font-size: 10px; margin-top: 15px; color: #555;">BY CKRPRO | YOUTUBE: CKR UNKNOWN</p>
+    <p style="font-size: 10px; margin-top: 20px; color: #555; font-weight: 600;">BY CKRPRO | YOUTUBE: CKR UNKNOWN</p>
 </div>
 
 <script>
     async function checkNow() {
         const uid = document.getElementById('uid').value;
         const log = document.getElementById('log');
-        const btn = document.getElementById('btnText');
+        const btn = document.getElementById('btn');
 
-        if(!uid) { log.innerHTML = "❌ Please enter UID!"; return; }
+        if(!uid) { log.innerHTML = "<span style='color:#ff5f56'>> Error: UID halnus!</span>"; return; }
 
-        log.innerHTML = "> Scanning ID: " + uid + "...<br>> Requesting Server...";
-        btn.disabled = true; btn.style.opacity = "0.5";
+        log.innerHTML = "> Scanning UID: " + uid + "...<br>> Connecting to API...<br>> Fetching Data...";
+        btn.disabled = true; btn.style.opacity = "0.6";
 
         try {
             const response = await fetch('/check', {
@@ -72,22 +72,29 @@
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({player_id: uid})
             });
-            
             const data = await response.json();
             
             setTimeout(() => {
-                if(data.is_banned === true) {
-                    log.innerHTML = "> ID: "+uid+"<br>> STATUS: <span style='color:red'>BANNED ❌</span><br>> Done.";
-                } else if(data.is_banned === false) {
-                    log.innerHTML = "> ID: "+uid+"<br>> STATUS: <span style='color:#00ff00'>SAFE ✅</span><br>> Done.";
+                // API response check (status: "NOT BANNED" or "BANNED")
+                if(data.status) {
+                    let isBanned = data.status.includes("NOT BANNED") ? false : true;
+                    let color = isBanned ? "#ff5f56" : "#00ff00";
+                    let resultText = isBanned ? "BANNED ❌" : "SAFE ✅";
+                    
+                    log.innerHTML = `
+                        > Connection Secure.<br>
+                        > Player: ${data.player_name || 'Unknown'}<br>
+                        > Region: ${data.region || 'Unknown'}<br>
+                        > Status: <span style="color:${color}; font-weight:bold;">${resultText}</span><br><br>
+                        > Done.
+                    `;
                 } else {
-                    log.innerHTML = "> Server Busy.<br>> Status: <span style='color:yellow'>NOT FOUND</span><br>> Try again later.";
+                    log.innerHTML = "> <span style='color:#ff5f56'>Error: Invalid ID</span>";
                 }
                 btn.disabled = false; btn.style.opacity = "1";
             }, 1000);
-
         } catch(e) {
-            log.innerHTML = "❌ Connection Failed!";
+            log.innerHTML = "> <span style='color:#ff5f56'>Server Connection Failed!</span>";
             btn.disabled = false; btn.style.opacity = "1";
         }
     }
