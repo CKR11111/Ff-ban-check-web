@@ -1,103 +1,144 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CKRPRO BAN CHECK</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@700&family=Poppins:wght@400;600&display=swap');
-        body {
-            background: linear-gradient(180deg, #fbc2eb 0%, #a6c1ee 100%);
-            height: 100vh; display: flex; align-items: center; justify-content: center;
-            font-family: 'Poppins', sans-serif; margin: 0; padding: 10px;
-        }
-        .compact-card {
-            background: rgba(255, 255, 255, 0.4); backdrop-filter: blur(20px);
-            border-radius: 30px; padding: 30px 20px; width: 100%; max-width: 350px;
-            border: 1px solid rgba(255, 255, 255, 0.5); text-align: center;
-        }
-        .banner {
-            font-family: 'Rajdhani', sans-serif; font-size: 24px; color: #007AFF;
-            text-transform: uppercase; margin-bottom: 20px; font-weight: 800;
-        }
-        .input-box {
-            background: rgba(255, 255, 255, 0.9); border: none; border-radius: 12px;
-            padding: 14px; width: 100%; font-size: 16px; margin-bottom: 15px; outline: none;
-        }
-        .check-btn {
-            background: #007AFF; color: white; border-radius: 12px;
-            padding: 14px; width: 100%; font-weight: bold; transition: 0.3s;
-        }
-        .terminal {
-            background: #1a1a1a; border-radius: 15px; margin-top: 20px; overflow: hidden;
-            text-align: left; font-family: monospace; box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-        }
-        .term-body { padding: 18px; color: #00ff00; min-height: 130px; font-size: 13px; line-height: 1.6; }
-        .dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; margin-right: 5px; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FF BAN CHECK</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: -apple-system, sans-serif;
+    background: linear-gradient(135deg,#d9a7c7,#fffcdc);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* MAIN CARD */
+.card {
+    width: 100%;
+    max-width: 340px;
+    padding: 18px;
+    border-radius: 25px;
+    background: rgba(255,255,255,0.25);
+    backdrop-filter: blur(18px);
+    box-shadow: 0 10px 35px rgba(0,0,0,0.2);
+}
+
+/* TITLE */
+.title {
+    text-align: center;
+    color: #007aff;
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+/* INPUT */
+.input-box {
+    width: 100%;
+    margin-bottom: 12px;
+}
+
+input {
+    width: 100%;
+    height: 48px;
+    border-radius: 14px;
+    border: none;
+    padding: 0 14px;
+    font-size: 15px;
+    outline: none;
+}
+
+/* BUTTON */
+button {
+    width: 100%;
+    height: 48px;
+    border-radius: 14px;
+    border: none;
+    background: #007aff;
+    color: white;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+/* TERMINAL */
+.terminal {
+    margin-top: 15px;
+    width: 100%;
+    height: 130px;
+    background: #0b0b0b;
+    color: #00ff88;
+    border-radius: 14px;
+    padding: 12px;
+    font-size: 13px;
+    font-family: monospace;
+    overflow-y: auto;
+    white-space: pre-line;
+}
+
+/* MOBILE FIX */
+@media (max-width: 400px) {
+    .card {
+        max-width: 92%;
+    }
+}
+</style>
 </head>
+
 <body>
 
-<div class="compact-card">
-    <div class="banner">CKRPRO BAN CHECK</div>
-    <input type="number" id="uid" class="input-box" placeholder="Enter Player UID">
-    <button onclick="checkNow()" class="check-btn" id="btn">CHECK STATUS</button>
+<div class="card">
 
-    <div class="terminal">
-        <div style="background:#2d2d2d; padding:8px 15px;">
-            <div class="dot" style="background:#ff5f56"></div>
-            <div class="dot" style="background:#ffbd2e"></div>
-            <div class="dot" style="background:#27c93f"></div>
-        </div>
-        <div class="term-body" id="log">> Ready for input ...</div>
+    <div class="title">FF BAN CHECK</div>
+
+    <div class="input-box">
+        <input type="number" id="uid" placeholder="Enter UID">
     </div>
-    <p style="font-size: 10px; margin-top: 20px; color: #555; font-weight: 600;">BY CKRPRO | YOUTUBE: CKR UNKNOWN</p>
+
+    <button onclick="checkBan()">CHECK STATUS</button>
+
+    <div class="terminal" id="terminal">
+> Ready...
+    </div>
+
 </div>
 
 <script>
-    async function checkNow() {
-        const uid = document.getElementById('uid').value;
-        const log = document.getElementById('log');
-        const btn = document.getElementById('btn');
+function checkBan() {
+    let uid = document.getElementById("uid").value;
+    let terminal = document.getElementById("terminal");
 
-        if(!uid) { log.innerHTML = "<span style='color:#ff5f56'>> Error: UID halnus!</span>"; return; }
-
-        log.innerHTML = "> Scanning UID: " + uid + "...<br>> Connecting to API...<br>> Fetching Data...";
-        btn.disabled = true; btn.style.opacity = "0.6";
-
-        try {
-            const response = await fetch('/check', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({player_id: uid})
-            });
-            const data = await response.json();
-            
-            setTimeout(() => {
-                // API response check (status: "NOT BANNED" or "BANNED")
-                if(data.status) {
-                    let isBanned = data.status.includes("NOT BANNED") ? false : true;
-                    let color = isBanned ? "#ff5f56" : "#00ff00";
-                    let resultText = isBanned ? "BANNED ❌" : "SAFE ✅";
-                    
-                    log.innerHTML = `
-                        > Connection Secure.<br>
-                        > Player: ${data.player_name || 'Unknown'}<br>
-                        > Region: ${data.region || 'Unknown'}<br>
-                        > Status: <span style="color:${color}; font-weight:bold;">${resultText}</span><br><br>
-                        > Done.
-                    `;
-                } else {
-                    log.innerHTML = "> <span style='color:#ff5f56'>Error: Invalid ID</span>";
-                }
-                btn.disabled = false; btn.style.opacity = "1";
-            }, 1000);
-        } catch(e) {
-            log.innerHTML = "> <span style='color:#ff5f56'>Server Connection Failed!</span>";
-            btn.disabled = false; btn.style.opacity = "1";
-        }
+    if (!uid) {
+        terminal.innerHTML = "> ❌ Enter UID first";
+        return;
     }
+
+    terminal.innerHTML = "> Checking...\n";
+
+    fetch("/check", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: "uid=" + uid
+    })
+    .then(res => res.text())
+    .then(data => {
+        terminal.innerHTML += "> Result:\n" + data;
+    })
+    .catch(() => {
+        terminal.innerHTML += "> ❌ Failed";
+    });
+}
 </script>
+
 </body>
 </html>
